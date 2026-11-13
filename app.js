@@ -132,7 +132,9 @@
     document.getElementById("side").innerHTML = html;
     document.getElementById("random").addEventListener("click", function (e) {   // any person, place, creature or lore entry
       e.preventDefault();
-      var pool = App.index.filter(function (x) { return /^(people|places|creatures|lore)$/.test(x.kind); });
+      var open = App.index.filter(function (x) { return !App.hidden(App.byId[x.kind + "/" + x.id]); });   // covered entries stay covered
+      var pool = open.filter(function (x) { return /^(people|places|creatures|lore)$/.test(x.kind); });
+      if (!pool.length) pool = open;   // every one of those covered (The Long Thaw): any open entry
       var x = pool[Math.floor(Math.random() * pool.length)];
       App.go(App.href(x.kind, x.id));
     });
